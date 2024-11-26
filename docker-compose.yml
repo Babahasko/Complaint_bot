@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    command: sh -c "python main.py"
+    env_file:
+      - ./.env
+    restart: always
+    ports:
+      - "80:80"
