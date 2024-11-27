@@ -9,7 +9,7 @@ from .states import Register
 
 from utils import logger
 from .base_keyboard import get_register_keyboard, get_stop_keyboard, RegisterButtonText
-
+from .actions_keyboard import  get_bot_actions_keyboard, ActionsButtonText
 
 router = Router(name=__name__)
 
@@ -21,7 +21,10 @@ async def start_handler(msg: Message):
     }
     user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
     if user:
-        await msg.answer("Начнём же работу по ведению статистики!")
+        await msg.answer(
+            text="Начнём же работу по ведению статистики!",
+            reply_markup=get_bot_actions_keyboard(),
+        )
     else:
         await msg.answer(
             text=f"Пожалуйста зарегистрируйтесь!",
@@ -44,11 +47,23 @@ async def handle_stop_register(msg: Message, state: FSMContext):
 
 @router.message(Register.username)
 async def handle_register_username_invalid_content_type(
-        msg: Message
+        msg: Message,
+        state: FSMContext,
 ):
-    await msg.answer(
+    await state.clear()
+    params = {
+        "telegramm_account": msg.from_user.username,
+    }
+    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    logger.info(user)
+    if user:
+        await msg.answer(f" {markdown.hbold("Вы уже зарегистрированы!")} \n"
+                         f"Телеграмм аккаунт: {user["telegramm_account"]}\n "
+                         f"Ник: {user["username"]}")
+    else:
+        await msg.answer(
         f"Извините, я понимаю только текстовые имена. Попробуйте ещё разок."
-    )
+        )
 
 @router.message(Register.username, F.text)
 async def handle_register_username(msg: Message, state: FSMContext):
@@ -82,6 +97,16 @@ async def help_handler(msg: Message):
         text=text,
     )
 
+@router.message()
+async def message_handler(msg: Message):
+    await msg.answer(text=f"Пагади...")
+    logger.info(f"{msg.chat.id}")
+    try:
+        await msg.forward(chat_id=msg.chat.id)
+        # await msg.copy_to(chat_id=msg.chat.id)
+        # await msg.send_copy(chat_id=msg.chat.id)
+    except TypeError:
+        await msg.reply(text="Чо то новенькое")
 # markup = get_register_keyboard()
 # markup = get_on_start_keyboard()
 # await msg.answer(

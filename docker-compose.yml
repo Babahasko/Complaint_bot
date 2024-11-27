@@ -1,3 +1,5 @@
+name: complaint_bot
+
 services:
   app:
     build: .

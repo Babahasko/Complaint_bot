@@ -18,7 +18,7 @@ def get_register_keyboard():
     return markup
 
 def get_stop_keyboard():
-    button_stop = KeyboardButton(text=ButtonText.STOP)
+    button_stop = KeyboardButton(text=RegisterButtonText.STOP)
     button_row = [button_stop]
     markup = ReplyKeyboardMarkup(
         keyboard=[button_row],
