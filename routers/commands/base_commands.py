@@ -1,15 +1,15 @@
 import requests
 
 from aiogram import Router, F
-from aiogram.types import Message, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.utils import markdown
 from aiogram.fsm.context import FSMContext
 from .states import Register
 
 from utils import logger
-from .base_keyboard import get_register_keyboard, get_stop_keyboard, RegisterButtonText
-from .actions_keyboard import  get_bot_actions_keyboard, ActionsButtonText
+from routers.keyboards.base_keyboard import get_register_keyboard, get_stop_keyboard, RegisterButtonText
+from routers.keyboards.actions_keyboard import  get_bot_actions_keyboard
 
 router = Router(name=__name__)
 

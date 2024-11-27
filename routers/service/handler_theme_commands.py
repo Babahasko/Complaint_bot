@@ -4,4 +4,4 @@ from utils import logger
 
 router = Router(name=__name__)
 
-@router.message()
+# @router.message()
