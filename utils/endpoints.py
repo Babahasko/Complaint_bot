@@ -4,3 +4,5 @@ class Endpoints:
     ShowUserThemes = "http://127.0.0.1:8000/theme/show_user_themes/"
     PostTheme = "http://127.0.0.1:8000/theme"
     DeleteTheme = "http://127.0.0.1:8000/theme/"
+    PostSurveillance = "http://127.0.0.1:8000/surveillance"
+    ShowUserSurveillances = "http://127.0.0.1:8000/surveillance/show_user_surveillances/"
