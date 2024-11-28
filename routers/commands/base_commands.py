@@ -45,6 +45,27 @@ async def handle_stop_register(msg: Message, state: FSMContext):
     await state.clear()
     await msg.answer("Очень жаль, что вы не зарегистрировались... 😢")
 
+@router.message(Register.username, F.text)
+async def handle_register_username(msg: Message, state: FSMContext):
+    await state.update_data(username=msg.text)
+    await state.clear()
+
+    new_user = {
+        "telegramm_account": msg.from_user.username,
+        "username": msg.text
+    }
+    response = requests.post("http://127.0.0.1:8000/user/register", json=new_user)
+    logger.info(response.status_code)
+    if response.status_code == 200:
+        await msg.answer(
+            f"Категорически приветствую, {markdown.hbold(msg.text)}!",
+            reply_markup=get_bot_actions_keyboard(),
+        )
+    else:
+        await msg.answer(
+            f"Извините, что-то пошло не так... 😢"
+        )
+
 @router.message(Register.username)
 async def handle_register_username_invalid_content_type(
         msg: Message,
@@ -65,26 +86,6 @@ async def handle_register_username_invalid_content_type(
         f"Извините, я понимаю только текстовые имена. Попробуйте ещё разок."
         )
 
-@router.message(Register.username, F.text)
-async def handle_register_username(msg: Message, state: FSMContext):
-    await state.update_data(username=msg.text)
-    await state.clear()
-
-    new_user = {
-        "telegramm_account": msg.from_user.username,
-        "username": msg.text
-    }
-    response = requests.post("http://127.0.0.1:8000/user/register", json=new_user)
-    logger.info(response.status_code)
-    if response.status_code == 200:
-        await msg.answer(
-            f"Категорически приветствую, {markdown.hbold(msg.text)}!",
-        )
-    else:
-        await msg.answer(
-            f"Извините, что-то пошло не так... 😢"
-        )
-
 
 @router.message(Command("help"))
 async def help_handler(msg: Message):
@@ -97,16 +98,6 @@ async def help_handler(msg: Message):
         text=text,
     )
 
-@router.message()
-async def message_handler(msg: Message):
-    await msg.answer(text=f"Пагади...")
-    logger.info(f"{msg.chat.id}")
-    try:
-        await msg.forward(chat_id=msg.chat.id)
-        # await msg.copy_to(chat_id=msg.chat.id)
-        # await msg.send_copy(chat_id=msg.chat.id)
-    except TypeError:
-        await msg.reply(text="Чо то новенькое")
 # markup = get_register_keyboard()
 # markup = get_on_start_keyboard()
 # await msg.answer(
