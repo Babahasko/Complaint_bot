@@ -22,7 +22,8 @@
 
 
 ## Запуск бота
-Перед запуском проекта, у вас должно быть развернуто и работать в docker приложение complaint_statistic
+Перед запуском проекта, у вас должно быть развернуто и работать в docker приложение complaint_statistic.
+
 Копируем проект
 ```shell
 git clone https://github.com/Babahasko/Complaint_bot
