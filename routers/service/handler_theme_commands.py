@@ -66,10 +66,11 @@ async def handle_show_theme(msg: Message):
         "user_id": user["id"]
     }
     user_themes = requests.get(Endpoints.ShowUserThemes, params=params).json()
-
-    text = get_pretty_enumerate_list_of_themes(user_themes)
-
-    await msg.answer(f"{text}")
+    if user_themes:
+        text = get_pretty_enumerate_list_of_themes(user_themes)
+        await msg.answer(f"{text}")
+    else:
+        await msg.answer(f"Вы ещё не добавили ни одной темы")
 
 @router.message(F.text == ActionsButtonText.DeleteTheme)
 async def handle_delete_theme(msg: Message, state: FSMContext):
