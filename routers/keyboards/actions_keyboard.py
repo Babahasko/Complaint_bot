@@ -1,13 +1,13 @@
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 class ActionsButtonText:
-    CreateTheme = "Создать тему 🌝️"
+    CreateTheme = "Добавить тему 🌝️"
     ShowTheme = "Показать темы 🌝"
     DeleteTheme = "Удалить тему 🌝"
-    CreateSurveillance = "Создать объект 🤡"
+    CreateSurveillance = "Добавить объект 🤡"
     ShowSurveillance = "Показать объекты 🤡"
     DeleteSurveillance = "Удалить объект 🤡"
-    CreateComplain = "Создать жалобу ✍️"
+    CreateComplain = "Добавить жалобу ✍️"
     ShowComplain = "Показать жалобы ✍️"
     DeleteComplain = "Удалить жалобу ✍️"
 
