@@ -6,3 +6,4 @@ class Endpoints:
     DeleteTheme = "http://127.0.0.1:8000/theme/"
     PostSurveillance = "http://127.0.0.1:8000/surveillance"
     ShowUserSurveillances = "http://127.0.0.1:8000/surveillance/show_user_surveillances/"
+    DeleteSurveillance = "http://127.0.0.1:8000/surveillance/"

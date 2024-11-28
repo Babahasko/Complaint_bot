@@ -65,11 +65,13 @@ async def handle_show_surveillances(msg: Message):
     params = {
         "user_id": user["id"]
     }
-    user_themes = requests.get(Endpoints.ShowUserSurveillances, params=params).json()
+    user_surveillances = requests.get(Endpoints.ShowUserSurveillances, params=params).json()
 
-    text = get_pretty_enumerate_list_of_surveillances(user_themes)
-
-    await msg.answer(f"{text}")
+    if user_surveillances:
+        text = get_pretty_enumerate_list_of_surveillances(user_surveillances)
+        await msg.answer(f"{text}")
+    else:
+        await msg.answer(f"Вы ещё не добавили ни одного объекта")
 
 @router.message(F.text == ActionsButtonText.DeleteSurveillance)
 async def handle_delete_theme(msg: Message, state: FSMContext):
@@ -104,7 +106,7 @@ async def handle_delete_theme_name(msg: Message, state: FSMContext):
         await msg.answer(text=f"Перепроверьте введеные данные, у нас не получилось найти такого объекта")
 
     if search_surveillance:
-        response = requests.delete(Endpoints.DeleteTheme, params={"surveillance_id": search_surveillance["id"]})
+        response = requests.delete(Endpoints.DeleteSurveillance, params={"surveillance_id": search_surveillance["id"]})
         if response.status_code == 200:
             await msg.answer(
                 text=f"Успешно удален объект {search_surveillance['name']}!",
