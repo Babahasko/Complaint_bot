@@ -104,7 +104,7 @@ async def handle_delete_theme_name(msg: Message, state: FSMContext):
         await msg.answer(text=f"Перепроверьте введеные данные, у нас не получилось найти такой темы")
 
     if search_theme:
-        response = requests.delete("http://127.0.0.1:8000/theme/", params={"theme_id": search_theme["id"]})
+        response = requests.delete(Endpoints.DeleteTheme, params={"theme_id": search_theme["id"]})
         if response.status_code == 200:
             await msg.answer(
                 text=f"Успешно удалена тема {search_theme['name']}!",
