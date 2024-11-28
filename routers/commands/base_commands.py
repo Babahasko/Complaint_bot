@@ -7,7 +7,7 @@ from aiogram.utils import markdown
 from aiogram.fsm.context import FSMContext
 from .states import Register
 
-from utils import logger
+from utils import logger, Endpoints
 from routers.keyboards.base_keyboard import get_register_keyboard, get_stop_keyboard, RegisterButtonText
 from routers.keyboards.actions_keyboard import  get_bot_actions_keyboard
 
@@ -19,7 +19,7 @@ async def start_handler(msg: Message):
     params = {
         "telegramm_account": msg.from_user.username,
     }
-    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    user = requests.get(Endpoints.GetUser, params=params).json()
     if user:
         await msg.answer(
             text="Начнём же работу по ведению статистики!",
@@ -54,7 +54,7 @@ async def handle_register_username(msg: Message, state: FSMContext):
         "telegramm_account": msg.from_user.username,
         "username": msg.text
     }
-    response = requests.post("http://127.0.0.1:8000/user/register", json=new_user)
+    response = requests.post(Endpoints.PostUser, json=new_user)
     logger.info(response.status_code)
     if response.status_code == 200:
         await msg.answer(
@@ -75,7 +75,7 @@ async def handle_register_username_invalid_content_type(
     params = {
         "telegramm_account": msg.from_user.username,
     }
-    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    user = requests.get(Endpoints.GetUser, params=params).json()
     logger.info(user)
     if user:
         await msg.answer(f" {markdown.hbold("Вы уже зарегистрированы!")} \n"
