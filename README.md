@@ -14,7 +14,6 @@
 
 ## Описание проекта
 Проект написан на aiogram и полностью зависит от [complaint_statistic](https://github.com/Babahasko/complaint_statistic)
-Перед запуском проекта, у вас должно быть развернуто и работать в docker приложение complaint_statistic
 
 ## Реализованный функционал
 1. Регистрация пользователей
@@ -22,7 +21,7 @@
 
 
 ## Запуск бота
-
+Перед запуском проекта, у вас должно быть развернуто и работать в docker приложение complaint_statistic
 Копируем проект
 ```shell
 git clone https://github.com/Babahasko/Complaint_bot
