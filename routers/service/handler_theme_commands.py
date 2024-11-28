@@ -5,7 +5,7 @@ from aiogram.types import Message
 from aiogram.utils import markdown
 import requests
 
-from utils import logger, get_theme_from_list_by_name, get_theme_from_list_by_enumerate_index, get_pretty_enumerate_list_of_themes
+from utils import logger, Endpoints, get_theme_from_list_by_name, get_theme_from_list_by_enumerate_index, get_pretty_enumerate_list_of_themes
 from routers.keyboards import ActionsButtonText
 from .states import Theme
 
@@ -27,13 +27,13 @@ async def handle_theme_name(msg: Message, state: FSMContext):
     params = {
         "telegramm_account": msg.from_user.username,
     }
-    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    user = requests.get(Endpoints.GetUser, params=params).json()
 
     new_theme = {
         "name":msg.text,
         "user_id": user["id"],
     }
-    response = requests.post("http://127.0.0.1:8000/theme", json=new_theme)
+    response = requests.post(Endpoints.PostTheme, json=new_theme)
     logger.info(response.status_code)
     if response.status_code == 200:
         await msg.answer(
@@ -60,12 +60,12 @@ async def handle_show_theme(msg: Message):
     params = {
         "telegramm_account": msg.from_user.username,
     }
-    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    user = requests.get(Endpoints.GetUser, params=params).json()
 
     params = {
         "user_id": user["id"]
     }
-    user_themes = requests.get("http://127.0.0.1:8000/theme/show_user_themes/", params=params).json()
+    user_themes = requests.get(Endpoints.ShowUserThemes, params=params).json()
 
     text = get_pretty_enumerate_list_of_themes(user_themes)
 
@@ -83,12 +83,12 @@ async def handle_delete_theme_name(msg: Message, state: FSMContext):
     params = {
         "telegramm_account": msg.from_user.username,
     }
-    user = requests.get("http://127.0.0.1:8000/user/get_user/", params=params).json()
+    user = requests.get(Endpoints.GetUser, params=params).json()
 
     params = {
         "user_id": user["id"]
     }
-    user_themes = requests.get("http://127.0.0.1:8000/theme/show_user_themes/", params=params).json()
+    user_themes = requests.get(Endpoints.ShowUserThemes, params=params).json()
 
 
     search_theme_by_name = get_theme_from_list_by_name(user_themes, msg.text)
