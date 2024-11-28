@@ -1,5 +1,3 @@
-from .logger import logger
-
 def get_theme_from_list_by_name(user_themes, search_theme_name):
     all_theme_names = [theme["name"] for theme in user_themes]
     if search_theme_name in all_theme_names:
@@ -13,13 +11,8 @@ def get_theme_from_list_by_enumerate_index(user_themes, search_theme_number):
     except (ValueError, TypeError):
         return None
     list_of_themes = [[index + 1, theme] for index, theme in enumerate(user_themes)]
-    logger.info(f"list_of_themes = {list_of_themes}")
     all_theme_enumerate_numbers = [theme[0] for theme in list_of_themes]
-    logger.info(f"all_theme_enumerate_numbers = {all_theme_enumerate_numbers}")
-    logger.info(f"search_theme_number = {search_theme_number}")
-    logger.info(f"search_theme_number in all_theme_enumerate_numbers: {search_theme_number in all_theme_enumerate_numbers}")
     if search_theme_number in all_theme_enumerate_numbers:
-        logger.info(f"user_themes[all_theme_enumerate_numbers.index(search_theme_number)] = {user_themes[all_theme_enumerate_numbers.index(search_theme_number)]}")
         return user_themes[all_theme_enumerate_numbers.index(search_theme_number)]
     else:
         return None

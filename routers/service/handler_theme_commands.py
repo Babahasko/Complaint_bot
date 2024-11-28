@@ -6,7 +6,7 @@ from aiogram.utils import markdown
 import requests
 
 from utils import logger, get_theme_from_list_by_name, get_theme_from_list_by_enumerate_index, get_pretty_enumerate_list_of_themes
-from routers.keyboards import get_bot_actions_keyboard, ActionsButtonText
+from routers.keyboards import ActionsButtonText
 from .states import Theme
 
 router = Router(name=__name__)
@@ -113,20 +113,3 @@ async def handle_delete_theme_name(msg: Message, state: FSMContext):
             await msg.answer(
                 text=f"Не удалось удалить тему"
         )
-    # if search_theme_by_name is not None or search_theme_by_number is not None:
-    #     if search_theme_by_name is None:
-    #         search_theme = search_theme_by_number
-    #     else:
-    #         search_theme = search_theme_by_name
-
-
-@router.message()
-async def message_handler(msg: Message):
-    await msg.answer(text=f"Пагади...")
-    logger.info(f"{msg.chat.id}")
-    try:
-        await msg.forward(chat_id=msg.chat.id)
-        # await msg.copy_to(chat_id=msg.chat.id)
-        # await msg.send_copy(chat_id=msg.chat.id)
-    except TypeError:
-        await msg.reply(text="Чо то новенькое")

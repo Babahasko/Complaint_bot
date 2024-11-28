@@ -35,13 +35,3 @@ def get_bot_actions_keyboard():
         resize_keyboard=True,
     )
     return markup
-
-def get_stop_keyboard():
-    button_stop = KeyboardButton(text=ButtonText.STOP)
-    button_row = [button_stop]
-    markup = ReplyKeyboardMarkup(
-        keyboard=[button_row],
-        resize_keyboard=True,
-        one_time_keyboard=True,
-    )
-    return markup
