@@ -8,5 +8,6 @@ class Settings(BaseSettings):
         case_sensitive=False,
     )
     bot_token: str
+    server_address: str
 
 settings = Settings()
