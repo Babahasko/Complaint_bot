@@ -1,4 +1,5 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton
+
 
 class ActionsButtonText:
     CreateTheme = "Добавить тему 🌝️"

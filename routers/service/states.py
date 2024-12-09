@@ -7,3 +7,7 @@ class Theme(StatesGroup):
 class Surveillance(StatesGroup):
     name = State()
     delete = State()
+
+class Complain(StatesGroup):
+    surveillance = State()
+    theme = State()
