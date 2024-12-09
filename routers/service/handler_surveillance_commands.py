@@ -61,10 +61,8 @@ async def handle_invalid_surveillance_name(msg: Message, state: FSMContext):
 
 @router.message(F.text == ActionsButtonText.ShowSurveillance)
 async def handle_show_surveillances(msg: Message):
-    params = {
-        "telegramm_account": msg.from_user.username,
-    }
-    user = requests.get(Endpoints.GetUser, params=params).json()
+
+    user = await request_user(msg)
 
     params = {
         "user_id": user["id"]
