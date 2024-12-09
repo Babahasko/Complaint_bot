@@ -5,7 +5,13 @@ from aiogram.types import Message
 from aiogram.utils import markdown
 import requests
 
-from utils import logger, Endpoints, get_surveillance_from_list_by_name, get_surveillance_from_list_by_enumerate_index, get_pretty_enumerate_list_of_surveillances
+from utils import (logger, Endpoints,
+                   get_surveillance_from_list_by_name,
+                   get_surveillance_from_list_by_enumerate_index,
+                   get_pretty_enumerate_list_of_surveillances)
+
+from utils import request_user
+
 from routers.keyboards import ActionsButtonText
 from .states import Surveillance
 
@@ -24,15 +30,13 @@ async def handle_create_surveillance(msg: Message, state: FSMContext):
 async def handle_surveillance_name(msg: Message, state: FSMContext):
     await state.clear()
 
-    params = {
-        "telegramm_account": msg.from_user.username,
-    }
-    user = requests.get(Endpoints.GetUser, params=params).json()
+    user = await request_user(msg)
 
     new_surveillance = {
         "name":msg.text,
         "user_id": user["id"],
     }
+
     response = requests.post(Endpoints.PostSurveillance, json=new_surveillance)
     logger.info(response.status_code)
     if response.status_code == 200:
