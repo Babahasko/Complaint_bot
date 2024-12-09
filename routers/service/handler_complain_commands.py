@@ -12,8 +12,13 @@ from utils import logger
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
-from utils import request_user_themes, request_user_surveillances
-from routers.keyboards import get_inline_themes_keyboard, get_inline_surveillance_keyboard, get_confirming_keyboard
+from utils import (request_user_themes,
+                   request_user_surveillances,
+                   request_create_complain)
+
+from routers.keyboards import (get_inline_themes_keyboard,
+                               get_inline_surveillance_keyboard,
+                               get_confirming_keyboard)
 
 router = Router(name=__name__)
 
@@ -82,3 +87,26 @@ async def handle_choosing_surveillance(callback: CallbackQuery, state: FSMContex
 
     await state.set_state(ComplaintForm.confirming)
 
+@router.callback_query(ComplaintForm.confirming, F.data.startswith("complain_"))
+async def handle_confirming_complain(callback: CallbackQuery, state: FSMContext):
+    choosen_button = callback.data.split("_")[1]
+    match choosen_button:
+        case "confirm":
+            state_data = await state.get_data()
+
+            surveillance_name = state_data["choosen_surveillance"]
+            theme_name = state_data["choosen_theme"]
+            surveillance_id = state_data["choosen_surveillance_id"]
+            theme_id = state_data["choosen_theme_id"]
+            response = await request_create_complain(callback, surveillance_id, theme_id)
+
+            if response.status_code == 200:
+                await callback.message.edit_text(f"Запись 'Объект: {surveillance_name},"
+                                                 f" Тема жалобы: {theme_name}' занесена в базу данных")
+            else:
+                await callback.message.edit_text(
+                    f"Извините, что-то пошло не так... 😢"
+                )
+        case "decline":
+            await callback.message.edit_text(f"Внесение жалобы отменено")
+    await state.clear()
