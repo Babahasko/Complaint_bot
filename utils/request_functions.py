@@ -5,9 +5,9 @@ from .endpoints import Endpoints
 from aiogram.types import Message, CallbackQuery
 
 
-async def request_user(input: Union[Message, CallbackQuery]):
+async def request_user(input_type: Union[Message, CallbackQuery]):
     params = {
-        "telegramm_account": input.from_user.username,
+        "telegramm_account": input_type.from_user.username,
     }
     user = requests.get(Endpoints.GetUser, params=params).json()
     return user
@@ -25,10 +25,7 @@ async def request_user_themes(msg: Message):
     return user_themes
 
 async def request_user_surveillances(callback: CallbackQuery):
-    params = {
-        "telegramm_account": callback.from_user.username,
-    }
-    user = requests.get(Endpoints.GetUser, params=params).json()
+    user = await request_user(callback)
 
     params = {
         "user_id": user["id"]
@@ -45,3 +42,13 @@ async def request_create_complain(callback: CallbackQuery, surveillance_id, them
     }
     response = requests.post(Endpoints.PostComplain, json=new_complain)
     return response
+
+async def request_user_complains(input_type: Union[Message, CallbackQuery]):
+    user = await request_user(input_type)
+    params = {
+        "user_id": user["id"]
+    }
+    user_complains = requests.get(Endpoints.ShowUserComplains, params=params).json()
+    return user_complains
+
+

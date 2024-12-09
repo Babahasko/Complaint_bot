@@ -12,9 +12,11 @@ from utils import logger
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 
-from utils import (request_user_themes,
+from utils import (request_user,
+                   request_user_themes,
                    request_user_surveillances,
-                   request_create_complain)
+                   request_create_complain,
+                   request_user_complains)
 
 from routers.keyboards import (get_inline_themes_keyboard,
                                get_inline_surveillance_keyboard,
@@ -110,3 +112,8 @@ async def handle_confirming_complain(callback: CallbackQuery, state: FSMContext)
         case "decline":
             await callback.message.edit_text(f"Внесение жалобы отменено")
     await state.clear()
+
+@router.message(F.text == ActionsButtonText.ShowComplain)
+async def handle_show_complain(msg: Message):
+    user_complains = await request_user_complains(msg)
+    await msg.answer(f"{user_complains}")
