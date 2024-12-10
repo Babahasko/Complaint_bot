@@ -10,5 +10,7 @@ class Endpoints:
     ShowUserSurveillances = f"{settings.server_address}/surveillance/show_user_surveillances/"
     DeleteSurveillance = f"{settings.server_address}/surveillance/"
     PostComplain = f"{settings.server_address}/complain"
-    ShowUserComplains = f"{settings.server_address}/complain/show_user_complains/"
+    ShowUserComplains = f"{settings.server_address}/complain/show_user_complains_pretty/"
+    DeleteComplain = f"{settings.server_address}/complain/"
+
 

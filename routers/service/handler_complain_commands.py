@@ -16,11 +16,15 @@ from utils import (request_user,
                    request_user_themes,
                    request_user_surveillances,
                    request_create_complain,
-                   request_user_complains)
+                   request_user_complains,
+                   request_delete_complain)
 
 from routers.keyboards import (get_inline_themes_keyboard,
                                get_inline_surveillance_keyboard,
                                get_confirming_keyboard)
+from utils.help_complain_handler_functions import (get_pretty_enumerate_list_of_complains,
+                                                   get_complain_from_list_by_enumerate_index)
+from .states import Complain
 
 router = Router(name=__name__)
 
@@ -116,4 +120,38 @@ async def handle_confirming_complain(callback: CallbackQuery, state: FSMContext)
 @router.message(F.text == ActionsButtonText.ShowComplain)
 async def handle_show_complain(msg: Message):
     user_complains = await request_user_complains(msg)
-    await msg.answer(f"{user_complains}")
+    logger.info(f"user_complains {user_complains}")
+
+    if user_complains:
+        text = get_pretty_enumerate_list_of_complains(user_complains)
+        await msg.answer(f"{text}")
+    else:
+        await msg.answer(f"Вы ещё не добавили ни одного объекта")
+
+@router.message(F.text == ActionsButtonText.DeleteComplain)
+async def handle_delete_theme(msg: Message, state: FSMContext):
+    await state.set_state(Complain.delete)
+    await msg.answer(f"Введите порядковый номер записи")
+
+@router.message(Complain.delete, F.text)
+async def handel_delete_complain(msg: Message, state: FSMContext):
+    await state.clear()
+    user_complains = await request_user_complains(msg)
+    search_complain = get_complain_from_list_by_enumerate_index(user_complains, msg.text)
+    if search_complain is None:
+        await msg.answer(text=f"Перепроверьте введенные данные,"
+                              f" указанная запись не была найдена")
+    else:
+        response = await request_delete_complain(search_complain['id'])
+        if response.status_code == 200:
+            theme = search_complain['theme']
+            surveillance = search_complain['surveillance']
+            data = search_complain['readable_data']
+            await msg.answer(
+                text=f"Успешно удалена запись: {surveillance} {theme} {data}!",
+            )
+        else:
+            await msg.answer(
+                text=f"Не удалось удалить объект"
+        )
+

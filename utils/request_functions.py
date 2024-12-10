@@ -51,4 +51,9 @@ async def request_user_complains(input_type: Union[Message, CallbackQuery]):
     user_complains = requests.get(Endpoints.ShowUserComplains, params=params).json()
     return user_complains
 
+async def request_delete_complain(complain_id):
+    params = {"complain_id": complain_id}
+    response = requests.delete(Endpoints.DeleteComplain, params=params)
+    return response
+
 

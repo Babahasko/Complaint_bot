@@ -11,3 +11,4 @@ class Surveillance(StatesGroup):
 class Complain(StatesGroup):
     surveillance = State()
     theme = State()
+    delete = State()
